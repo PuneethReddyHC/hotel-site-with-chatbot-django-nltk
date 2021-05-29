@@ -76,6 +76,11 @@ This is a Hotel website which consist of both admin and user panel with chatbot 
    py -m venv env
     
   </li>
+  <li><b>Activate Environment</b> <br>
+ 
+   source env/Scripts/activate   or ./env/Scripts/activate.bat
+    
+  </li>
   <li><b>Download Dependencies</b> <br>
  
    pip install -r requirements.txt
