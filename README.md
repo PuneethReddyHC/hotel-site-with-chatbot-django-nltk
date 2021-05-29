@@ -111,3 +111,24 @@ This is a Hotel website which consist of both admin and user panel with chatbot 
   </li>
 </ul>
    
+<h3>ScreenShots</h3>
+
+<b>Register Page<b>
+<img alt="Register" src="https://github.com/PuneethReddyHC/hotel-site-with-chatbot-django-nltk/blob/main/screenshots/1.png" />
+
+<b>Home Page or Search <b>
+<img alt="Register" src="https://github.com/PuneethReddyHC/hotel-site-with-chatbot-django-nltk/blob/main/screenshots/2.png" />
+  
+<b>Hotels List<b>
+<img alt="Register" src="https://github.com/PuneethReddyHC/hotel-site-with-chatbot-django-nltk/blob/main/screenshots/4.png" />
+
+<b>Details Page<b>
+<img alt="Register" src="https://github.com/PuneethReddyHC/hotel-site-with-chatbot-django-nltk/blob/main/screenshots/5.png" />
+
+
+<b>Weather Info<b>
+<img alt="Register" src="https://github.com/PuneethReddyHC/hotel-site-with-chatbot-django-nltk/blob/main/screenshots/6.png" />
+
+
+<b>ChatBot<b>
+<img alt="Register" src="https://github.com/PuneethReddyHC/hotel-site-with-chatbot-django-nltk/blob/main/screenshots/7.png" />
