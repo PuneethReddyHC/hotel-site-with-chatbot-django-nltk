@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+<a class="btn btn-default pull-right" href="{% url 'HotelApp:hotelindex' %}">Back</a>
+<div class="container">
+  
+  <div class="row justify-content-center">
+    
+  <div class="m-5 col-md-6 col-md-offset-3 ">
+
+    <div class="p-3 card card-outline-secondary">
+
+      <h4>My Bookings:</h4>
+
+      <br />
+<!-- Loads all of the Current users reservations in a list and displays all  the details -->
+
+      {%for booking in bookings%}
+        <div class="row">
+          <a class="btn btn-sm btn-danger float-right mr-2 ml-3" href="{% url 'Reservations:cancelbooking' booking.id %}">Cancel</a>
+          <!-- <a  class="btn btn-sm btn-default pull-right mr-2"href="{% url 'Reservations:gpdf' booking.id %}">Download PDF</a> -->
+        </div>
+        <div class="mt-3 mb-3">
+          <h3><u> {{booking.hotel.Name}}</u></h3>
+        </div>
+        <p><mark>Room Type :</mark> {{booking.room.RoomType}}.  </p>
+        <p><mark>Guest Name :</mark>  {{booking.guestFirstName}} {{booking.guestLastName}}.  </p>
+        <p><mark>Hotel Booking Date :</mark> {{booking.CheckIn}}.  </p>
+        <p><mark>Check-out Date:</mark> {{booking.CheckOut}}.  </p>
+        <p><mark>Total Price :</mark> ${{booking.totalPrice}}.  </p>
+
+
+        <hr />
+      {%endfor%}
+    </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

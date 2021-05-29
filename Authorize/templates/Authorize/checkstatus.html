@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<!-- Users can check their proposal status on this page -->
+          {% if proposal %}
+          <p>
+              {{user.username}} -  You're proposal is currently being reviewed , we aim to get back to you shortly.
+          </p>
+
+        {% else %}
+        <p>
+          {{user.username}} you have no pending proposals.
+        </p>
+
+        {% endif %}
+
+ <a href="{% url 'HotelApp:hotelindex'  %}" class="btn">Back to Home.</a>
+
+{% endblock %}

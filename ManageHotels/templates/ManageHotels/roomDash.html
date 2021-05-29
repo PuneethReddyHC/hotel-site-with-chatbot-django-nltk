@@ -1,0 +1,54 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+
+<!-- Displays the Room dashboard -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">{{Hotel.Name}} | Rooms</div>
+
+                <div class="panel-body">
+
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Type</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                <!-- Displays each room in a hotel allowing the partner to add , edit and delete them. -->
+                        {%for room in rooms%}
+
+                        <tr>
+                          <td><a class="" href="#"> {{room.RoomType}}:</a></td>
+                          <td></td>
+
+                          <td><a class="btn btn-default pull-right" href="{% url 'ManageHotels:editRoom' room.id %}">Edit Room</a></td>
+                          <form action="{% url 'ManageHotels:deleteRoom' room.id %}" method="post">
+                              {% csrf_token %}
+                          <td><button type="submit" class="btn btn-danger pull-right">Delete Room</button></td>
+                          </form>
+                        </tr>
+
+                      {%endfor%}
+                    </tbody>
+                </table>
+                <hr>
+                <a class="btn btn-success pull-left" href="{% url 'ManageHotels:addRoom' Hotel.id %}">Add Room</a>
+                </div>
+                <hr>
+                  <a class="btn pull-right" href="{% url 'ManageHotels:managehotel' Hotel.id %}">Back</a>
+                <div class="panel-footel text-center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

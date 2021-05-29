@@ -1,0 +1,11 @@
+@font-face {
+	font-family: 'ElegantIcons';
+	src: url('./ElegantIcons.eot');
+	src: local('ElegantIcons'), url('./ElegantIcons.woff') format('woff'), url('./ElegantIcons.ttf') format('truetype');
+}
+/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_42835">Text with this font applied</p> */
+.fontsforweb_fontid_42835 {
+	font-family: 'ElegantIcons' !important;
+}
+
+/* Font downloaded from FontsForWeb.com */

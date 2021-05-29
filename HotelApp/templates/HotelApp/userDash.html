@@ -1,0 +1,41 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+
+
+<!-- Displays the Customer/user Dashboard -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Dashboard  |   You are logged in! {{user.username}}</div>
+
+                <div class="panel-body">
+                  <div class="list-group">
+                    <a href="{% url 'HotelApp:hotelindex'%}" class="list-group-item">Make a Booking</a>
+                    <a href="{% url 'Reservations:viewbookings'%}" class="list-group-item">View Your Bookings</a>
+                </div>
+            </div>
+            <hr>
+            <div class="panel panel-default">
+              <!-- Users can become partners on the website -->
+                <div class="panel-heading">Want to Partner with Hotel Booking.com?</div>
+
+                <div class="panel-body">
+                  <div class="list-group">
+                    <a href="{% url 'HotelApp:newproposal'%}" class="list-group-item">Become a Partner Now!</a>
+                    <a href="{% url 'Authorize:checkproposal'%}" class="list-group-item">Check your proposal status</a>
+                  </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

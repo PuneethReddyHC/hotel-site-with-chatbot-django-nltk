@@ -1,0 +1,157 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<section class="hero-section" id="home">
+  <div class="container">
+     <div class="row">
+        <div class="col-lg-6">
+           <div class="hero-text">
+              <h1>Hotel Booking A Luxury Hotel</h1>
+              <p>Here are the best hotel booking sites, including recommendations for international
+                 travel and for finding low-priced hotel rooms.
+              </p>
+              <a href="#" class="primary-btn">Discover Now</a>
+           </div>
+        </div>
+        <div class="col-xl-4 col-lg-5 offset-xl-2 offset-lg-1" id="search_layout">
+           <div class="booking-form">
+              <h3>Booking Your Hotel</h3>
+              <form method="POST"  action="" enctype="multipart/form-data" name="search" onsubmit="return validateForm()">
+                {% csrf_token %}
+                 <div class="check-date">
+                  <label class=" text-muted" for="location">Enter Location:</label>
+                  <input class="" type="text" name="searchterm" id="location"  placeholder="Search..">
+                 </div>
+                 <div class="check-date">
+                    <label class="text-muted" for="checkin">Check-In and Check-Out dates:</label>
+                    <input  class="date" type="text" name="daterange" id="checkin"  placeholder="Select Date.." required>
+                 </div>
+                 
+                 <div class="select-option">
+                    <label for="guest">Guests:</label>
+                    <select id="guest" name="numtravelers" style="display: none;">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                    </select>
+                    <div class="nice-select" tabindex="0">
+                       <span class="current">1 Person</span>
+                       <ul class="list">
+                        <li data-value="1" class="option selected focus">1 Persons</li>
+                          <li data-value="2" class="option">2 Persons</li>
+                          <li data-value="3" class="option">3 Persons</li>
+                          <li data-value="4" class="option">4 Persons</li>
+                          <li data-value="5" class="option">5 Persons</li>
+                          <li data-value="6" class="option">6 Persons</li>
+                       </ul>
+                    </div>
+                 </div>
+                 
+                 <button type="submit">Check Availability</button>
+              </form>
+           </div>
+        </div>
+     </div>
+  </div>
+  <div class="hero-slider owl-carousel">
+    <div class="hs-item set-bg" data-setbg="https://preview.colorlib.com/theme/sona/img/hero/hero-2.jpg" style="background-image: url(&quot;https://preview.colorlib.com/theme/sona/img/hero/hero-2.jpg&quot;);"></div>
+    <div class="hs-item set-bg" data-setbg="https://preview.colorlib.com/theme/sona/img/hero/hero-1.jpg" style="background-image: url(&quot;https://preview.colorlib.com/theme/sona/img/hero/hero-1.jpg&quot;);"></div>
+    <div class="hs-item set-bg" data-setbg="https://preview.colorlib.com/theme/sona/img/hero/hero-3.jpg" style="background-image: url(&quot;https://preview.colorlib.com/theme/sona/img/hero/hero-3.jpg&quot;);"></div>
+  </div>
+</section>
+<section class="hp-room-section">
+  <div class="container-fluid">
+     <div class="hp-room-items">
+        <div class="about-text mt-2">
+          <div class="section-title">
+            <span>Rooms</span>
+            <h2>Hotels List
+               
+            </h2>
+               {% if check_in and check_out %}
+                  <p><h5>check-in: <b>{{check_in}} </b></h5></p>
+                  <p><h5>Check-out: <b>{{check_out}}  </b></h5></p>
+                  <p><h5>Stay: <b>{{duration}}</b> Nights.</h5></p>
+               {% endif %}
+          </div>
+        </div>
+        <div class="row" id="list_layout">
+          {% for Hotel in Hotels %}
+           <div class="col-lg-3 col-md-6">
+            <div class="hp-room-item set-bg" data-setbg="https://preview.colorlib.com/theme/sona/img/room/room-b1.jpg" style="background-image: url(&quot;{{Hotel.imagePath}}&quot;);">
+              
+                 <div class="hr-text">
+                    <h3>{{ Hotel.Name}}</h3>
+                    <p class ="card-text">{{Hotel.Description}}</p>
+                    <table>
+                       <tbody>
+                          <tr>
+                             <td class="r-o">Size:</td>
+                             <td>30 ft</td>
+                          </tr>
+                          <tr>
+                             <td class="r-o">Capacity:</td>
+                             <td>Max persion 5</td>
+                          </tr>
+                          <tr>
+                             <td class="r-o">Bed:</td>
+                             <td>King Beds</td>
+                          </tr>
+                          <tr>
+                             <td class="r-o">Services:</td>
+                             <td>Wifi, Television, Bathroom,...</td>
+                          </tr>
+                       </tbody>
+                    </table>
+                     {% if user.is_authenticated %}
+                        {% if check_in and check_out %}
+                           <a href="{% url 'HotelApp:hoteldetails' Hotel.id %}" class="primary-btn">More Details</a>
+                        {% else %}
+                           <a href="#home" id="alert" class="primary-btn">More Details</a>
+                        {% endif %}
+                     {% else %}
+                      <a href="{% url 'auth_login'%}" class="primary-btn">View</a>
+
+                    {% endif %}
+                 </div>
+              </div>
+           </div>
+           {% endfor %}
+        </div>
+     </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://unpkg.com/flatpickr"></script>
+
+  <script>
+   $("#alert").click(function(){
+      alert("Please Select Checkout and Checkin.");
+   });
+  flatpickr(".date", {
+
+	minDate: "today",
+  mode:"range",
+
+});
+
+function validateForm() {
+  var setdate = document.forms["search"]["daterange"].value;
+  if(setdate == ""){
+    alert("Date Must be Filled Out");
+    return false;
+  }
+}
+
+
+
+
+</script>
+{% endblock %}

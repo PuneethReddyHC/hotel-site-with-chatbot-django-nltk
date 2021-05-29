@@ -1,0 +1,332 @@
+  <!-- The base template -->
+  <!DOCTYPE html>
+  {% load staticfiles %}
+  <html lang="en">
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+      <title>Hotels</title>
+  
+      <!-- Styles for the js slideshow and the main css file. -->
+      <!-- Styles for Bootstrap , Date Picker , Image Uploader , Slideshow and Rating. -->
+      {% block style_content %}
+  
+      {% endblock %}
+      <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+      <link href="https://fonts.googleapis.com/css?family=Lora:400,700&amp;display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Cabin:400,500,600,700&amp;display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="{% static "style/bootstrap.min.css" %}" type="text/css">
+      <link rel="stylesheet" href="{% static "style/font-awesome.min.css" %}" type="text/css">
+      <link rel="stylesheet" href="{% static "style/elegant-icons.css" %}" type="text/css">
+      <link rel="stylesheet" href="{% static "style/flaticon.css" %}" type="text/css">
+      <link rel="stylesheet" href="{% static "style/owl.carousel.min.css" %}" type="text/css">
+      <link rel="stylesheet" href="{% static "style/nice-select.css" %}" type="text/css">
+      <link rel="stylesheet" href="{% static "style/jquery-ui.min.css" %}" type="text/css">
+      <link rel="stylesheet" href="{% static "style/magnific-popup.css" %}" type="text/css">
+      <link rel="stylesheet" href="{% static "style/slicknav.min.css" %}" type="text/css">
+      <link rel="stylesheet" href="{% static "style/style.css" %}" type="text/css">
+   
+  </head>
+  <body data-new-gr-c-s-check-loaded="14.993.0" data-gr-ext-installed="">
+    <div id="preloder" style="display: none;">
+       <div class="loader" style="display: none;"></div>
+    </div>
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="canvas-open">
+       <i class="icon_menu"></i>
+    </div>
+    <div class="offcanvas-menu-wrapper">
+       <div class="canvas-close">
+          <i class="icon_close"></i>
+       </div>
+       <div class="search-icon  search-switch">
+          <i class="icon_search"></i>
+       </div>
+       
+       <style>
+ul ul.submenu {
+	position: absolute;
+	width: 170px;
+	background: #fff;
+	left: 0;
+	top: 120%;
+	visibility: hidden;
+	opacity: 0;
+	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.05);
+	padding: 17px 0;
+	-webkit-transition: .3s;
+	-moz-transition: .3s;
+	-o-transition: .3s;
+	transition: .3s
+}
+
+ ul ul.submenu>li {
+	margin-left: 7px;
+	display: block
+}
+
+ ul ul.submenu>li>a {
+	padding: 6px 10px !important;
+	font-size: 16px;
+	color: #1D2547;
+	font-weight: 700;
+	text-transform: capitalize
+}
+
+ ul ul.submenu>li>a::after {
+	position: unset
+}
+
+ ul ul.submenu>li>a:hover {
+	color: #FD8F5F;
+	background: none
+}
+ ul>li:hover>ul.submenu {
+	visibility: visible;
+	opacity: 1;
+	top: 100%
+}
+       </style>
+       <div id="mobile-menu-wrap">
+          <div class="slicknav_menu">
+             <a href="#" aria-haspopup="true" role="button" tabindex="0" class="slicknav_btn slicknav_collapsed" style="outline: none;"><span class="slicknav_menutxt">MENU</span><span class="slicknav_icon"><span class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span></span></a>
+             <nav class="slicknav_nav slicknav_hidden" style="display: none;" aria-hidden="true" role="menu">
+                <ul>
+                    {% if user.is_authenticated %}
+                    
+                          <li><a href="{% url 'HotelApp:hotelindex'%}" role="menuitem">Home</a></li>
+                          <li><a href="{% url 'Reservations:viewbookings'%}" role="menuitem">MyBookings</a></li>
+                          <li><a href="{% url 'HotelChatbot:chatbot'%}" role="menuitem">Chat</a></li>
+                          <li><a href="#"> {{request.user.username}}</a>
+                           <ul class="submenu">
+                           <li><a href="{% url 'auth_logout'%}?next=/" role="menuitem">Logout</a></li>
+                           </ul>
+                           </li>
+                        
+                       
+                        {% if request.user.is_staff %}
+                            <li><a href="{% url 'ManageHotels:home'%}" role="menuitem">ManageHotel</a></li>
+                        {% endif %}
+                        {% else %}
+                          <li><a href="{% url 'registration_register'%}" role="menuitem">Register</a></li>
+                          <li><a href="{% url 'auth_login'%}" role="menuitem">Login</a></li>
+                        {% endif %}
+                   
+                </ul>
+             </nav>
+          </div>
+       </div>
+       
+    </div>
+    <header class="header-section">
+       
+       <div class="menu-item">
+          <div class="container">
+             <div class="row">
+                <div class="col-lg-2">
+                   <div class="logo">
+                     {% if user.is_authenticated %}
+                      <a href="{% url 'HotelApp:hotelindex'%}">
+                      <h4>Hotel Booking</h4>
+                      </a>
+                      {% else %}
+                      <a href="#">
+                        <h4>Hotel Booking</h4>
+                        </a>
+                        {% endif %}
+                   </div>
+                </div>
+                <div class="col-lg-10">
+                   <div class="nav-menu">
+                      <nav class="mainmenu">
+                         <ul>
+                            {% if user.is_authenticated %}
+                            
+                          <li><a href="{% url 'HotelApp:hotelindex'%}">Home</a></li>
+                          <li><a href="{% url 'Reservations:viewbookings'%}">MyBookings</a></li>
+                          <li><a href="{% url 'HotelChatbot:chatbot'%}">Chat</a></li>
+                          <li><a href="#"> {{request.user.username}}</a>
+                              <ul class="submenu">
+                                 <li><a href="{% url 'auth_logout'%}?next=/" role="menuitem">Logout</a></li>
+                              </ul>
+                           </li>
+                        
+                        {% if request.user.is_staff %}
+                            <li><a href="{% url 'ManageHotels:home'%}">ManageHotel</a></li>
+                        {% endif %}
+                          {% else %}
+                          <li><a href="{% url 'registration_register'%}">Register</a></li>
+                          <li><a href="{% url 'auth_login'%}" role="menuitem">Login</a></li>
+                          {% endif %}
+                         </ul>
+                      </nav>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </header>
+    
+                {% block content %}
+  
+                {% endblock %}
+              
+  
+              <footer class="footer-section">
+                <div class="container">
+                   <div class="footer-text">
+                      <div class="row">
+                         <div class="col-lg-4">
+                            <div class="ft-about">
+                               <div class="logo">
+                                  <a href="#">
+                                  <img src="https://preview.colorlib.com/theme/sona/img/footer-logo.png" alt="">
+                                  </a>
+                               </div>
+                               <p>We inspire and reach millions of travelers<br> across 90 local websites</p>
+                               <div class="fa-social">
+                                  <a href="#"><i class="fa fa-facebook"></i></a>
+                                  <a href="#"><i class="fa fa-twitter"></i></a>
+                                  <a href="#"><i class="fa fa-tripadvisor"></i></a>
+                                  <a href="#"><i class="fa fa-instagram"></i></a>
+                                  <a href="#"><i class="fa fa-youtube-play"></i></a>
+                               </div>
+                            </div>
+                         </div>
+                         <div class="col-lg-3 offset-lg-1">
+                            <div class="ft-contact">
+                               <h6>Contact Us</h6>
+                               <ul>
+                                  <li>(12) 345 67890</li>
+                                  <li>info.colorlib@gmail.com</li>
+                                  <li>856 Cordia Extension Apt. 356, Lake, United State</li>
+                               </ul>
+                            </div>
+                         </div>
+                         <div class="col-lg-3 offset-lg-1">
+                            <div class="ft-newslatter">
+                               <h6>New latest</h6>
+                               <p>Get the latest updates and offers.</p>
+                               <form action="#" class="fn-form">
+                                  <input type="text" placeholder="Email">
+                                  <button type="submit"><i class="fa fa-send"></i></button>
+                               </form>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div class="copyright-option">
+                   <div class="container">
+                      <div class="row">
+                         <div class="col-lg-7">
+                            <ul>
+                               <li><a href="#">Contact</a></li>
+                               <li><a href="#">Terms of use</a></li>
+                               <li><a href="#">Privacy</a></li>
+                               <li><a href="#">Environmental Policy</a></li>
+                            </ul>
+                         </div>
+                         <div class="col-lg-5">
+                            <div class="co-text">
+                               <p>
+                                  Copyright ©<script>document.write(new Date().getFullYear());</script>2021 All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                               </p>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </footer>
+             <div class="search-model">
+                <div class="h-100 d-flex align-items-center justify-content-center">
+                   <div class="search-close-switch"><i class="icon_close"></i></div>
+                   <form class="search-model-form">
+                      <input type="text" id="search-input" placeholder="Search here.....">
+                   </form>
+                </div>
+             </div>
+             <script src="{% static "js/jquery-3.3.1.min.js" %}"></script>
+             <script src="{% static "js/bootstrap.min.js" %}"></script>
+             <script src="{% static "js/jquery.magnific-popup.min.js" %}"></script>
+             <script src="{% static "js/jquery-ui.js" %}"></script>
+             <script src="{% static "js/jquery.slicknav.min.js" %}"></script>
+             <script src="{% static "js/owl.carousel.min.js" %}"></script>
+             <script src="{% static "js/nice-select.min.js" %}"></script>
+             <script src="{% static "js/main.js" %}"></script>
+             {% block scripts %}
+  
+             {% endblock %}
+     
+             <div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" style="position: absolute; top: 92.7661px; left: 924.5px; z-index: 6; display: none;">
+                <div class="ui-datepicker-header ui-widget-header ui-helper-clearfix ui-corner-all">
+                   <a class="ui-datepicker-prev ui-corner-all ui-state-disabled" title="Prev"><span class="ui-icon ui-icon-circle-triangle-w">Prev</span></a><a class="ui-datepicker-next ui-corner-all" data-handler="next" data-event="click" title="Next"><span class="ui-icon ui-icon-circle-triangle-e">Next</span></a>
+                   <div class="ui-datepicker-title"><span class="ui-datepicker-month">February</span>&nbsp;<span class="ui-datepicker-year">2021</span></div>
+                </div>
+                <table class="ui-datepicker-calendar">
+                   <thead>
+                      <tr>
+                         <th scope="col" class="ui-datepicker-week-end"><span title="Sunday">Su</span></th>
+                         <th scope="col"><span title="Monday">Mo</span></th>
+                         <th scope="col"><span title="Tuesday">Tu</span></th>
+                         <th scope="col"><span title="Wednesday">We</span></th>
+                         <th scope="col"><span title="Thursday">Th</span></th>
+                         <th scope="col"><span title="Friday">Fr</span></th>
+                         <th scope="col" class="ui-datepicker-week-end"><span title="Saturday">Sa</span></th>
+                      </tr>
+                   </thead>
+                   <tbody>
+                      <tr>
+                         <td class=" ui-datepicker-week-end ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td>
+                         <td class=" ui-datepicker-unselectable ui-state-disabled "><span class="ui-state-default">1</span></td>
+                         <td class=" ui-datepicker-unselectable ui-state-disabled "><span class="ui-state-default">2</span></td>
+                         <td class=" ui-datepicker-days-cell-over  ui-datepicker-today" data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default ui-state-highlight ui-state-hover" href="#">3</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">4</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">5</a></td>
+                         <td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">6</a></td>
+                      </tr>
+                      <tr>
+                         <td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">7</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">8</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">9</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">10</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">11</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">12</a></td>
+                         <td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">13</a></td>
+                      </tr>
+                      <tr>
+                         <td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">14</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">15</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">16</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">17</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">18</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">19</a></td>
+                         <td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">20</a></td>
+                      </tr>
+                      <tr>
+                         <td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">21</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">22</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">23</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">24</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">25</a></td>
+                         <td class=" " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">26</a></td>
+                         <td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">27</a></td>
+                      </tr>
+                      <tr>
+                         <td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="1" data-year="2021"><a class="ui-state-default" href="#">28</a></td>
+                         <td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td>
+                         <td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td>
+                         <td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td>
+                         <td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td>
+                         <td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td>
+                         <td class=" ui-datepicker-week-end ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td>
+                      </tr>
+                   </tbody>
+                </table>
+             </div>
+          </body>
+       </html>
+  
+  

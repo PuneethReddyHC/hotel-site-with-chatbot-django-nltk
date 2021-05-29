@@ -1,0 +1,260 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8  col-md-12 m-5">
+      <div class="p-4 card card-outline-secondary">
+    <!-- Displays the Hotels Name, Country and City and Company Name -->
+      <div class="page-header">
+
+          <h2>{{hotels.Name}} <small class="text-muted">- <u>{{hotels.Partner.CompanyName}}</u></small>
+
+          </h2>
+          <small>{{ hotels.Country}} |  {{ hotels.City}}</small>
+      </div>
+      <!-- Slideshow of all the Hotels Photos -->
+      <center>
+
+        <div class="autoplay">
+          {%for Photo in Photos|slice:"1:"%}
+          <div><img  src="{{MEDIA_URL}}{{Photo.path}}"></div>
+          {%endfor%}
+        </div>
+    </center>
+      <!-- End Slideshow -->
+
+    <!-- Information Box , Hotel details ( Address, Tel etc ) & Hotel Rating-->
+    <hr>
+    <div class= "panel panel-primary">
+
+      <div class = "panel-heading">
+        <h3 class="panel-title">Hotel Details:</h3>
+      </div>
+
+      <div class="panel panel-body">
+
+          <dl class="row">
+              <dt class="col-sm-5">Hotel Booking User Rating:</dt>
+                <dd class="col-sm-7">
+                    <img src="{%static starpath %}" /> <!-- Star path-->
+                    {% if Rating %}
+                    <b>{{Rating}}%</b>
+                    {% else %}
+                    <b>Not Rated</b>
+                    {% endif %}
+                </dd>
+              <dt class="col-sm-5">Address:</dt>
+                <dd class="col sm-7">
+                    {{ hotels.Address}}
+                </dd>
+              <dt class="col-sm-5">Telephone Number:</dt>
+                <dd class="col sm-7">
+                    {{ hotels.TelephoneNumber}}
+                </dd>
+        <!-- Unless there is only 1 hotel in this City , Display a recommended Hotel. -->
+                <dt class="col-sm-5">Other Hotels Nearby:</dt>
+                <dd class="col sm-7">
+                    {% if Recommended %}
+                      <a href="{% url 'HotelApp:hoteldetails' Recommended.id %}">{{Recommended.Name}}</a>
+                    {% else %}
+                    <p>
+                      No other nearby Hotels.
+                    </p>
+                    {% endif %}
+                </dd>
+
+        </dl>
+
+  </div>
+</div>
+<hr />
+<div class= "panel panel-primary">
+
+  <div class = "panel-heading">
+    <h3 class="panel-title ">Weather information about <b>{{hotels.City}}</b>:</h3>
+
+  </div>
+
+  <div class="panel panel-body">
+            <div class="text-center">
+              <b>Current Temperature</b>
+              <p id="temp"></p>
+              <img id="icon"  src="" />
+            </div>
+            <div class="text-center">
+              <b>Current Weather</b>
+              <p id="weather">
+              </p><p id="desc"></p>
+            </div>
+            <div id="info">
+            </div>
+
+
+
+
+
+</div>
+</div>
+
+<hr>
+      <!-- Displays a list of all Rooms that this Hotel Offers and the rooms information. -->
+      <h4>Rooms:</h4>
+      {% if rooms %}
+
+        {% for room in rooms %}
+
+
+
+
+        <h5><u> {{room.RoomType}}</u></h5>
+        <p><mark>Max Occupants :</mark>  {{room.Capacity}} People.</p>
+        <p><mark>Beds Provided :</mark> {{room.BedOption}}.</p>
+        <p><mark>View :</mark> {{room.View}}.</p>
+        <p><mark>Price :</mark> ${{room.Price}}</p>
+        <p><b>Rooms Left: </b>{{room.spaceleft}}</p>
+
+        {% if room.spaceleft > 0 %}
+
+        <a href="{% url 'Reservations:bookroom' hotels.id room.id %}" class="btn btn-success">Book</a>
+        <hr />
+        {% endif%}
+       {% endfor %}
+      {%endif%}
+
+          <!-- If Room has more than 0 rooms , Display a button to book the room.
+
+           -->
+
+
+
+<!-- Displays a table with all the reviews of the hotel that users have left. -->
+
+<h4>Reviews:</h4>
+
+<table class="table">
+
+      <thead>
+        <tr>
+        <th>User</th>
+        <th>Comment</th>
+        <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      {% if reviews %}
+
+        {% for review in reviews %}
+
+          <tr>
+              <td><a class="" href="#">{{review.user.username}}:</a></td>
+              <td>{{review.comment}}</td>
+              <!-- If the User that Posted the review and the current user match , display an edit and Delete button.-->
+                {% if review.user_id == user.id %}
+                  <td><a class="btn btn-default pull-right btn-sm" href="{% url 'HotelApp:editreview' review.id %}">Edit Review</a></td>
+
+                  <td>
+                    <form action="{% url 'HotelApp:deletereview' review.id %}" method="POST" enctype="multipart/form-data">
+                      {% csrf_token %}
+
+                        <button type="submit" class="btn btn-danger pull-right btn-sm">Delete Review</button>
+                      </form>
+
+                  </td>
+
+                  {% else %}
+                    <td></td>
+                    <td></td>
+                  {%endif%}
+
+          </tr>
+
+        {% endfor%}
+      {% endif %}
+      </tbody>
+</table>
+<hr>
+
+<!-- If the User has made a booking with the current hotel , display a Add review form. -->
+{% if allowReview == True %}
+<a class="btn btn-info pull-right btn-sm" href="{% url 'HotelApp:createreview' hotels.id %}">ADD Review</a>
+{% endif %}
+
+<!-- If Laravel Validation detects errors then this will show a message. -->
+</div>
+</div>
+</div>
+</div>
+{% endblock %}
+
+<!-- The scripts for the page are included below , Slideshow / Rating -->
+{% block scripts %}
+
+  <script src="{% static "js/slick.js" %}"></script>
+  <script>
+
+      $('.autoplay').on('init',function(slick){
+        console.log('fired');
+        $('.autoplay').fadeIn(300);
+      })
+      .slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 2500,
+        arrows:false,
+        infinite: true,
+        speed: 500,
+        fade: true,
+        cssEase: 'linear',
+        lazyLoad:'ondemand'
+
+      });
+
+  </script>
+
+
+  <script>
+
+      var City = "{{hotels.City}}";
+        function ascii (a) { return String.fromCharCode(a); }
+        function displayweather(data){
+          if (data.length !== 0){
+                var mainweather = (data.weather[0].main);
+                var desc = (data.weather[0].description);
+                var temp = (data.main.temp);
+                var code = (data.weather[0].icon)
+                var hum = (data.main.humidity)
+                var matemp = (data.main.temp_max)
+                var Wind= (data.wind.speed)
+                var img = "http://openweathermap.org/img/w/"+code+".png"
+                console.log()
+                var main = $('<p>').appendTo('#weather').text(mainweather + " | " +desc);
+                var temp = $('<p>').appendTo('#temp').text(temp +  ascii(176) +"C");
+                var humidity = $('<p>').appendTo('#info').text("Humidity:"+"   "+hum+"%"+"  -   "+ " Max Temp: "+matemp+" "+ ascii(176) +"C" +"  -  "+" Wind Speed: "+Wind+ "Mph");
+              //  var mintemp = $('<p>').appendTo('#info').text("Min Temp: "+mitemp+ ascii(176) +"C");
+              //  var wspeed = $('<p>').appendTo('#info').text("Wind Speed: "+Wind+ "Mph");
+                $("#icon").attr("src",img) }
+              else{
+                var error = $('<p>').appendTo('#info').text("Sorry , We have been unable to retrieve live weather information");
+              }
+        }
+
+
+
+      $(document).ready(function() {
+
+
+        $.getJSON("http://api.openweathermap.org/data/2.5/weather?q="+ City +"&units=metric&APPID=ae9512f4de94ef9415b53d6a357bd78a",displayweather);
+
+
+
+
+        })
+
+
+  </script>
+
+
+
+{% endblock %}

@@ -1,0 +1,307 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block style_content %}
+<title>Chat Window</title>
+<style>
+
+.bot__command {
+	 color: #f5f5f5;
+	 color: #27ae60;
+	 font-weight: 600;
+	 padding: 0.1em;
+}
+.nested_lu{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    
+}
+.nested_lu li{
+    padding-left: 15px;
+    padding-top: 5px;
+    list-style: none;
+}
+.nested_lu li a{
+    color:white;
+    text-decoration: underline;
+}
+.nested_lu li a:hover{
+    color: cyan;
+    text-decoration: underline;
+}
+.nested_lu li .icon{
+    width: 43px;
+    height: 54px;
+    margin-left: 40%;
+}
+.hotels li{
+    padding-top: 10px;
+}
+
+</style>
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{% static './css/multichat.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+<div class="row justify-content-center">
+<div id="frame" class="m-3">
+	<div id="sidepanel">
+		<div id="profile">
+			<div class="wrap">
+                {% if request.user.ImagePath %}
+                    <img id="profile-img" src="{{request.user.ImagePath}}" class="online" alt="" />
+                {% else %}
+                    <img id="profile-img" src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg" class="online" alt="" />
+                {% endif %}
+				<p>{{request.user}}</p>
+				<i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
+				
+			</div>
+		</div>
+		<div id="search">
+			<label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
+			<input type="text" placeholder="Search contacts..." />
+		</div>
+		<div id="contacts">
+			<ul class="botlist">
+                {% for bot in all_bots %}
+				<li class="contact"  onclick="openCity(event, '{{bot.id}}')" >
+					<div class="wrap">
+						<span class="contact-status online"></span>
+						<img src="{{bot.image}}" alt="" />
+						<div class="meta">
+							<p class="name">{{bot.botname}}</p>
+						</div>
+					</div>
+                </li>
+                {% endfor %}
+				
+			</ul>
+		</div>
+		
+    </div>
+    {% for bot in all_bots %}
+	<div class="content" id="{{bot.id}}" >
+		<div class="contact-profile">
+			<img class="avatar" src="{{bot.image}}" alt="" />
+			<p>{{bot.botname}}</p>
+			<div class="social-media">
+				<i class="fa fa-facebook" aria-hidden="true"></i>
+				<i class="fa fa-twitter" aria-hidden="true"></i>
+				 <i class="fa fa-instagram" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="messages">
+			<ul id="mylist" class="chatlist">
+                <li class="sent msg" id="some">
+                    <img class="avatar"src="https://image.shutterstock.com/z/stock-photo-cool-metal-robotic-toy-d-render-stylish-silver-robot-183044354.jpg" alt="" />
+                    <div class="cont">Hi, good to see you here!
+                    </div>
+                </li>
+                <li class="sent msg" id="some">
+                    <img class="avatar"src="https://image.shutterstock.com/z/stock-photo-cool-metal-robotic-toy-d-render-stylish-silver-robot-183044354.jpg" alt="" />
+                    <div class="cont">Checkout from the below available list!
+                    <ul class="nested_lu">
+                      <li class="input__nested-list"><a href="/HotelApp/#search_layout">Book a Hotel </a></li>
+                      <li class="input__nested-list"><a href="{% url 'Reservations:viewbookings'%}">Your Bookings</a></li>
+                      <li class="input__nested-list" ><a href="#" class="list_hotels">List Hotels</a></li>
+                      <li class="input__nested-list"><a href="#" class="price_hotels">Hotels Price</a></li>
+                      <li class="input__nested-list"><a href="#" class="weather_info">Weather Info </a></li>
+                    </ul>
+                    Thanks</div>
+                </li>
+        
+                {% for item in all_message_items %}
+                    {% if item.bot.id == bot.id %}
+                        {% if item.isbot %}
+                            <li class="sent msg" id="{{item.id}}">
+                                <img class="avatar" src="{{bot.image}}" alt="" />
+                                <div class="cont">{{item.content | safe}}</div>
+                            </li>
+                        {% else %}
+                        <li class="replies msg" id="{{item.id}}">
+                            <img class="avatar" src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg" alt="" />
+                            <p>{{item.content | safe}}</p>
+                        </li>
+                        {% endif %}
+                    {% endif %}
+				{% endfor %}
+                
+			</ul>
+        </div>
+        
+		<div class="message-input">
+			<div class="wrap">
+                <form id="chat__form" action= "{% url 'HotelChatbot:addmsg' %}" method="post">
+                    {% csrf_token %}
+                    <input type="number" hidden value="{{bot.id}}" id="botid" name="botid"/>
+                    <input type="text" name="content" id="content" placeholder="Write your message..." />
+                    <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+                    <button class="submit" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                </form>
+			</div>
+		</div>
+    </div>
+    {% endfor %}
+</div>
+</div>
+</div>
+
+
+{% endblock %}
+<!-- Scripts for the Date picker and Form validation  -->
+{% block scripts %}
+
+<script
+src="https://code.jquery.com/jquery-3.5.1.js"
+integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+crossorigin="anonymous"></script>
+
+<script>
+    
+    // function scrollToBottom() {
+    //     elmnt.scrollIntoView(false); // Bottom
+    // }
+    jQuery(document).ajaxSend(function(event, xhr, settings) {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function sameOrigin(url) {
+        // url could be relative or scheme relative or absolute
+        var host = document.location.host; // host + port
+        var protocol = document.location.protocol;
+        var sr_origin = '//' + host;
+        var origin = protocol + sr_origin;
+        // Allow absolute or scheme relative URLs to same origin
+        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+            // or any other URL that isn't scheme relative or absolute i.e relative.
+            !(/^(\/\/|http:|https:).*/.test(url));
+    }
+    function safeMethod(method) {
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    }
+});
+
+    
+    $(".list_hotels").click(function() {
+            //console.log(data);
+            botid = localStorage.getItem("botid");
+            $.ajax({
+                url	:	"{% url 'HotelChatbot:addmsg' %}",
+                method:	"POST",
+                data	:	{content:"List Hotels", botid: botid,
+                            'csrfmiddlewaretoken':$( "#csrfmiddlewaretoken" ).val()
+                            },
+                success	:	function(data){
+                    location.reload();
+                    
+                }
+            })
+            // $('#mylist').append('<li class="replies msg" id="{{item.id}}"><img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" /><p>'+data+'</p></li>');
+            // clearInput();
+
+            $("#mylist").stop().animate({ scrollTop: $("#mylist")[0].scrollHeight}, 1000);
+    });
+
+    $(".price_hotels").click(function() {
+            //console.log(data);
+            bot_id = localStorage.getItem("botid");
+            
+            $.ajax({
+                url	:	"{% url 'HotelChatbot:addmsg' %}",
+                method:	"POST",
+                data	:	{content:"Hotels Price", botid: bot_id,
+                            'csrfmiddlewaretoken':$( "#csrfmiddlewaretoken" ).val()
+                            },
+                success	:	function(data){
+                    location.reload();
+                    
+                }
+            })
+            // $('#mylist').append('<li class="replies msg" id="{{item.id}}"><img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" /><p>'+data+'</p></li>');
+            // clearInput();
+
+            $("#mylist").stop().animate({ scrollTop: $("#mylist")[0].scrollHeight}, 1000);
+    });
+
+    $(".weather_info").click(function() {
+            //console.log(data);
+            bot_id = localStorage.getItem("botid");
+            
+            $.ajax({
+                url	:	"{% url 'HotelChatbot:addmsg' %}",
+                method:	"POST",
+                data	:	{content:"Weather info", botid: bot_id,
+                            'csrfmiddlewaretoken':$( "#csrfmiddlewaretoken" ).val()
+                            },
+                success	:	function(data){
+                    location.reload();
+                    
+                }
+            })
+            // $('#mylist').append('<li class="replies msg" id="{{item.id}}"><img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" /><p>'+data+'</p></li>');
+            // clearInput();
+
+            $("#mylist").stop().animate({ scrollTop: $("#mylist")[0].scrollHeight}, 1000);
+    });
+// function clearInput() {
+//     $("#chat__form :input").each(function() {
+//         $(this).val(''); //hide form values
+//     });
+// }
+
+// $("#chat__form").submit(function() {
+//     return false; //to prevent redirection to save.php
+// });
+    
+    function openCity(evt, cityName) {
+      var i, tabcontent, tablinks;
+      
+      tabcontent = document.getElementsByClassName("content");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("contact");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(cityName).style.display = "block";
+      evt.currentTarget.className += " active";
+      
+      if (typeof(Storage) !== "undefined") {
+    // Store
+            localStorage.setItem("botid", cityName);
+            
+        
+        }
+    }
+    // $(document).ready(function(){
+    //     var list = $(".botlist:first-child").get();
+    //     console.log(list);
+    // });​
+    // Get the element with id="defaultOpen" and click on it
+    
+    var tag = document.getElementsByClassName("botlist")[0]
+            .getElementsByTagName("li")[0];
+            tag.click();
+    </script>
+{% endblock %}
